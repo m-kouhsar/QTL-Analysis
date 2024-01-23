@@ -24,7 +24,7 @@ InDir=./Inputs
 FilePrefix=UKBBN
 Dist=1e+6
 cis_pval=1
-trans_pval=0
+trans_pval=1
 trans_cross_chr=no
 
 SCRIPTDIR=./R
