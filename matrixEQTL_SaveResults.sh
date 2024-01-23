@@ -20,14 +20,14 @@ set -e
 ### NOTE: Do not store confidenial information in this file use the config file
 
 ######
-InDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Jan2024/UKBBN
+InDir=./Inputs
 FilePrefix=UKBBN
-Dist=250000
+Dist=1e+6
 cis_pval=1
 trans_pval=0
 trans_cross_chr=no
 
-SCRIPTDIR=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Scripts/eQTL.1
+SCRIPTDIR=./R
 
 module load R
 
