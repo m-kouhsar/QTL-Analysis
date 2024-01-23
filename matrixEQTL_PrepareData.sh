@@ -12,13 +12,11 @@
 ### print start date and time 
 echo Job started on:
 date -u
+###
 
-set -e
-####### 
-
-SCRIPTDIR=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Scripts/eQTL.1
-InDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Jan2024
-OutDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Jan2024/UKBBN
+SCRIPTDIR=./R
+InDir=./Inputs
+OutDir=./Outputs
 FilePrefix=UKBBN
 covar_fact=Gender,Brain.Bank,RINcat,Plate
 covar_num=Age
