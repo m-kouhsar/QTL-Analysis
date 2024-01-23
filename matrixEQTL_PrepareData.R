@@ -1,4 +1,3 @@
-@ -0,0 +1,161 @@
 ################################################
 ##   The following files should be in the same directory
 #  paste0(FilePrefix,".fam")
