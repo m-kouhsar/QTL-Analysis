@@ -9,7 +9,7 @@
 #SBATCH --ntasks-per-node=16 # specify number of processors.
 #SBATCH --mail-type=END # send email at job completion
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk # email address
-#SBATCH --array=1-22
+#SBATCH --array=1-22 ## for chromosomes 1-22
 ### print start date and time
 echo Job started on:
 date -u
@@ -21,10 +21,10 @@ set -e
 
 ######
 
-InDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Jan2024/UKBBN
+InDir=./Inputs
 chr=$SLURM_ARRAY_TASK_ID
 FilePrefix=UKBBN
-Dist=250000
+Dist=1e+6
 cis_pval=1            ## between 0 and 1
 trans_pval=1          ## between 0 and 1
 
@@ -45,7 +45,7 @@ trans_pval=1          ## between 0 and 1
 
 trans_cross_chr=no    ## yes or no
 
-SCRIPTDIR=/lustre/projects/Research_Project-191391/Morteza/Ehsan/eQTL/Scripts/eQTL.1
+SCRIPTDIR=./R
 
 module load R
 
