@@ -12,14 +12,15 @@
 ### print start date and time 
 echo Job started on:
 date -u
-###
+echo ""
+####### 
 
 SCRIPTDIR=./R
-InDir=./Inputs
-OutDir=./Outputs
+InDir=./Raw
+OutDir=./Results
 FilePrefix=UKBBN
-covar_fact=Gender,Brain.Bank,RINcat,Plate
-covar_num=Age
+covar_fact=""
+covar_num=""
 chr=all  ##for multiple chr use chr=2,3,5,8,19 or chr=all
 
 echo "Scritp directory: "$SCRIPTDIR
@@ -32,9 +33,7 @@ echo "Chromosome: "$chr
 echo "############################################################"
 echo ""
 
-mkdir -p $OutDir
-
-module load R
+mkdir -p $OutDir/${FilePrefix}
 
 IFS=',' read -r -a array <<< "$chr"
 
@@ -45,21 +44,21 @@ fi
 
 for i in "${array[@]}"
 do
-  if [ ! -f ${OutDir}/${FilePrefix}.chr${i}.raw ]
+  if [ ! -f ${OutDir}/${FilePrefix}/${FilePrefix}.chr${i}.raw ]
   then
     echo "Running chr ${i}..."
-    plink --bfile ${InDir}/${FilePrefix} --recodeA --chr $i --out ${OutDir}/${FilePrefix}.chr${i}
+    plink --bfile ${InDir}/${FilePrefix} --recodeA --chr $i --out ${OutDir}/${FilePrefix}/${FilePrefix}.chr${i}
     echo "#########################################################################################"
   fi
 done
 
-if [ ! -f ${OutDir}/${FilePrefix}.eigenvec ]
+if [ ! -f ${OutDir}/${FilePrefix}/${FilePrefix}.eigenvec ]
 then
-  gcta64 --bfile ${InDir}/${FilePrefix} --make-grm-bin --out ${OutDir}/${FilePrefix} --thread-num 16
-  gcta64 --grm ${OutDir}/${FilePrefix} --pca --out ${OutDir}/${FilePrefix}
+  gcta64 --bfile ${InDir}/${FilePrefix} --make-grm-bin --out ${OutDir}/${FilePrefix}/${FilePrefix} --thread-num 16
+  gcta64 --grm ${OutDir}/${FilePrefix}/${FilePrefix} --pca --out ${OutDir}/${FilePrefix}/${FilePrefix}
 fi
 
-Rscript ${SCRIPTDIR}/matrixQTL_eQTL_PrepareData.r $InDir $OutDir $covar_fact $covar_num $FilePrefix $chr
+Rscript ${SCRIPTDIR}/matrixQTL_eQTL_PrepareData.r $InDir $OutDir/${FilePrefix} "$covar_fact" "$covar_num" "$FilePrefix" $chr
 
 
 echo Job finished:
