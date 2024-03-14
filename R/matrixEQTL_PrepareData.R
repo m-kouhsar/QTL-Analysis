@@ -209,5 +209,4 @@ if(!file.exists(covariat.file)){
 }else{
   cat(covariat.file," exist\n")
 }
-
 cat("All done!\n")
