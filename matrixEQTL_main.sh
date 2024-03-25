@@ -10,14 +10,10 @@
 #SBATCH --mail-type=END # send email at job completion
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk # email address
 #SBATCH --array=1-22 ## for chromosomes 1-22
+
 ### print start date and time
 echo Job started on:
 date -u
-
-set -e
-####### 
-
-### NOTE: Do not store confidenial information in this file use the config file
 
 ######
 
@@ -27,7 +23,8 @@ FilePrefix=UKBBN
 Dist=1e+6
 cis_pval=1            ## between 0 and 1
 trans_pval=1          ## between 0 and 1
-
+trans_cross_chr=no    ## yes or no
+SCRIPTDIR=./R
 ###############################################################
 
 ## Set pvOutputThreshold > 0 and pvOutputThreshold.cis = 0 (or use Matrix_eQTL_engine) 
@@ -43,11 +40,6 @@ trans_pval=1          ## between 0 and 1
 
 ###############################################################
 
-trans_cross_chr=no    ## yes or no
-
-SCRIPTDIR=./R
-
-module load R
 
 Rscript ${SCRIPTDIR}/matrixQTL_eQTL_main.r $InDir $chr $FilePrefix $Dist $cis_pval $trans_pval "$trans_cross_chr"
 
