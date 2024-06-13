@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -A Research_Project-MRC164847 # research project to submit under.
+#SBATCH -A Research_Project1 # research project to submit under.
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -D . # set working directory to .
 #SBATCH -p mrcq
@@ -38,5 +38,5 @@ then
 fi
 
 
-Rscript ${ScriptDir}/PrepareData.r ${GenotypeBinaryPrefix}.fam ${OutPrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" $chr
+Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${OutPrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" $chr
 
