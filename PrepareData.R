@@ -46,6 +46,7 @@ if(file.exists(exp.rds.file)){
 }
 
 if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rownames(samples)))){
+  warning("Sample names in expression matrix and genotype data are not exactly matched! The intersection will be consider.")
   shared_names <- Reduce(intersect, list(colnames(exp_all),rownames(samples),rownames(eigenvec)))
   exp_all <- exp_all[,colnames(exp_all) %in% shared_names]
   samples <- samples[rownames(samples) %in% shared_names,]
@@ -64,6 +65,7 @@ if(file.exists(geneLocation.csv.file)){
   stop("Unable to find ",geneLocation.csv.file)
 }
 if(!identical(row.names(exp_all) , gene_loc_all$geneid)){
+  warning("Gene/CpG names in expression matrix and genotype data are not exactly matched! Trying to match them...")
   index <- match(row.names(exp_all) , gene_loc_all$geneid)
   gene_loc_all <- gene_loc_all[index,]
 }
@@ -90,6 +92,7 @@ if(file.exists(exp.pheno.file)){
   exp_sample <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
   
   if(!identical(rownames(exp_sample) , colnames(exp_all))){
+    warning("Sample names in expression matrix and phenotype data are not exactly matched! The intersection will be consider.")
     shared_names <- intersect(colnames(exp_all),rownames(exp_sample))
     exp_sample <- exp_sample[rownames(exp_sample) %in% shared_names,]
     exp_sample <- exp_sample[match(shared_names,rownames(exp_sample)),]
