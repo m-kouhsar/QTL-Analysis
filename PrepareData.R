@@ -13,6 +13,19 @@ covar.num <- args[7]
 OutPrefix <- args[8] 
 chr <- args[9]
 
+cat("############################### PrepareData.R script ###########################################\n")
+cat("Input arguments:\n")
+cat("     fam file: ",fam.file,"\n")
+cat("     eigenvec file: ",eigenvec.file,"\n")
+cat("     Methylation/Expression matrix file: ",exp.rds.file,"\n")
+cat("     Phenotype file: ",exp.pheno.file,"\n")
+cat("     CpG/Gene location file file: ",geneLocation.csv.file,"\n")
+cat("     Factor covariates: ",covar.fact,"\n")
+cat("     Numeric covariates: ",covar.num,"\n")
+cat("     Chromosome: ",chr,"\n")
+cat("     Output files prefix: ",OutPrefix,"\n")
+cat("#################################################################################################\n")
+
 if(chr=="all"){
   chr <- seq(1,22,1)
 }else{
