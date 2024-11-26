@@ -16,6 +16,7 @@ expression.file <- paste0(OutDir,"/",OutPrefix,".exp.txt")
 SNP.location.file <- paste0(OutDir,"/",OutPrefix,".snps.loc.chr",chr,".txt")
 gene.location.file <- paste0(OutDir,"/",OutPrefix,".gene.loc.txt")
 
+cat("############################### Main.R script ###########################################\n")
 cat("Arguments:\n")
 cat("  Output directory: ",OutDir,"\n")
 cat("  Output files prefix: ",OutPrefix,"\n")
@@ -28,7 +29,8 @@ cat("  cis distance: ",Dist,"\n")
 cat("  cis Pvalue: ",cis.pval,"\n")
 cat("  trans Pvalue: ",trans.pval,"\n")
 cat("  Get the trans results in cross chromosom mode? ",ifelse(trans.cross.chr,"Yes","No"),"\n")
-cat("\n")
+cat("##########################################################################################\n")
+
 # Matrix eQTL by Andrey A. Shabalin
 # http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/
 #
