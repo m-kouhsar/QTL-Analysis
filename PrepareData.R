@@ -122,7 +122,9 @@ if(file.exists(exp.pheno.file)){
       exp_sample[,c] <- as.numeric(exp_sample[,c])
     }
   }
-}
+}else{
+  message("No phenotype file is provided!")
+  }
 
 for (i in chr) {
   cat("************************\n")
@@ -179,7 +181,7 @@ cat("******************************************\n")
 if(!file.exists(covariat.file)){
   cat("Generating covariates file...\n")
 
-  if((covar.fact!="")&(covar.num!="")){
+  if((covar.fact!="")&(covar.num!="")&file.exists(exp.pheno.file)){
     covariates <- cbind.data.frame(exp_sample[,covar.fact],exp_sample[,covar.num],eigenvec$V3,eigenvec$V4,eigenvec$V5)
     names(covariates) <- c(covar.fact,covar.num,"PC1","PC2","PC3")
     
