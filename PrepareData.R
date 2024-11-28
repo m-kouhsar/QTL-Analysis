@@ -71,20 +71,18 @@ if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rown
 
 if(file.exists(geneLocation.csv.file)){
   cat("Reading Gene location data...\n")
-  gene_loc_all <- read.csv(file=geneLocation.csv.file,stringsAsFactors = F,row.names = 1)
-  gene_loc_all <- cbind.data.frame(rownames(gene_loc_all),gene_loc_all$chr,gene_loc_all$start,gene_loc_all$end)
+  gene_loc_all <- read.csv(file=geneLocation.csv.file,stringsAsFactors = F)
   names(gene_loc_all) <- c("geneid","chr","left","right")
 }else{
   stop("Unable to find ",geneLocation.csv.file)
 }
-if(!identical(row.names(exp_all) , gene_loc_all$geneid)){
-  warning("Gene/CpG names in expression matrix and genotype data are not exactly matched! Trying to match them...")
-  index <- match(row.names(exp_all) , gene_loc_all$geneid)
-  gene_loc_all <- gene_loc_all[index,]
+if(!all(gene_loc_all$geneid %in% row.names(exp_all))){
+  warning("Some Gene/CpG IDs in the Gene/CpG location data are not represented in the expression matrix! Removing them...")
+  gene_loc_all = gene_loc_all[gene_loc_all$geneid %in% exp_all]
 }
 
-exp_all <- cbind.data.frame(gene_loc_all$geneid,exp_all)
-names(exp_all)[1] <- "geneid"
+exp_all <- cbind.data.frame(geneid = rownames(exp_all),exp_all)
+
 
 if(!file.exists(exp.txt.file)){
   cat("Are the gene ids matched in gene expression and location data? ")
