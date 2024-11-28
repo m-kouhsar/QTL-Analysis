@@ -61,12 +61,18 @@ if(file.exists(exp.rds.file)){
 if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rownames(samples)))){
   warning("Sample names in expression matrix and genotype data are not exactly matched! The intersection will be consider.")
   shared_names <- Reduce(intersect, list(colnames(exp_all),rownames(samples),rownames(eigenvec)))
-  exp_all <- exp_all[,colnames(exp_all) %in% shared_names]
-  samples <- samples[rownames(samples) %in% shared_names,]
+  if(length(shared_names)==0){
+    stop("There is no shared samples between the Methylation/Expression matrix and Genotype data! 
+         Check the sample IDs in fam and Expression/Methylation files.")
+  }else{
+    exp_all <- exp_all[,colnames(exp_all) %in% shared_names]
+    samples <- samples[rownames(samples) %in% shared_names,]
+    
+    exp_all <- exp_all[shared_names]
+    samples <- samples[match(shared_names,rownames(samples)),]
+    eigenvec <- eigenvec[match(shared_names,rownames(eigenvec)),]
+  }
   
-  exp_all <- exp_all[shared_names]
-  samples <- samples[match(shared_names,rownames(samples)),]
-  eigenvec <- eigenvec[match(shared_names,rownames(eigenvec)),]
 }
 
 if(file.exists(geneLocation.csv.file)){
@@ -85,8 +91,6 @@ exp_all <- cbind.data.frame(geneid = rownames(exp_all),exp_all)
 
 
 if(!file.exists(exp.txt.file)){
-  cat("Are the gene ids matched in gene expression and location data? ")
-  cat(ifelse(identical(exp_all$geneid,gene_loc_all$geneid),"Yes","NO"),"\n")
   cat("Saving Expression data...\n")
   write.table(exp_all,file = exp.txt.file,quote = F,col.names = T,row.names = F,sep = '\t')
 }else{
