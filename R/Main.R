@@ -45,38 +45,38 @@ if((!file.exists(Out.name)) | (overwrite)){
   library(MatrixEQTL)
   
   # Linear model to use, modelANOVA, modelLINEAR, or modelLINEAR_CROSS
-  useModel = modelLINEAR; # modelANOVA, modelLINEAR, or modelLINEAR_CROSS
+  useModel = modelLINEAR # modelANOVA, modelLINEAR, or modelLINEAR_CROSS
   
   # Covariates file name
   # Set to character() for no covariates
   
   # Error covariance matrix
   # Set to numeric() for identity.
-  errorCovariance = numeric();
+  errorCovariance = numeric()
   # Only associations significant at this level will be saved
-  pvOutputThreshold_cis = cis.pval;
-  pvOutputThreshold_tra = trans.pval;
+  pvOutputThreshold_cis = cis.pval
+  pvOutputThreshold_tra = trans.pval
   
   # Distance for local gene-SNP pairs
-  cisDist = Dist;
+  cisDist = Dist
   
   cat("Reading gene/probe expression/methylation data...\n")
   tryCatch(expr = {
-    expression = SlicedData$new();
-    expression$fileDelimiter = "\t";      # the TAB character
-    expression$fileOmitCharacters = "NA"; # denote missing values;
-    expression$fileSkipRows = 1;          # one row of column labels
-    expression$fileSkipColumns = 1;       # one column of row labels
-    expression$LoadFile(expression.file);
+    expression = SlicedData$new()
+    expression$fileDelimiter = "\t"      # the TAB character
+    expression$fileOmitCharacters = "NA" # denote missing values
+    expression$fileSkipRows = 1          # one row of column labels
+    expression$fileSkipColumns = 1       # one column of row labels
+    expression$LoadFile(expression.file)
   },
   error=function(e){
     stop("The following error occured during reading the expression file:\n",conditionMessage(e))
   })
   cat("Reading gene/probe location data...\n")
-  genepos = read.table(gene.location.file, header = TRUE, stringsAsFactors = FALSE);
+  genepos = read.table(gene.location.file, header = TRUE, stringsAsFactors = FALSE)
   if(!trans.cross.chr){
-    index <- which(genepos$chr==chr)
-    genepos <- genepos[index,]
+    genepos <- genepos[genepos$chr==chr,]
+    index = match(unique(genepos$geneid) , rownames(expression))
     expression$RowReorder(index)
   }
   if(nrow(expression) == 0){
@@ -85,12 +85,12 @@ if((!file.exists(Out.name)) | (overwrite)){
   
   cat("Reading covariate data...\n")
   tryCatch(expr = {
-    cvrt = SlicedData$new();
-    cvrt$fileDelimiter = "\t";      # the TAB character
-    cvrt$fileOmitCharacters = "NA"; # denote missing values;
-    cvrt$fileSkipRows = 1;          # one row of column labels
-    cvrt$fileSkipColumns = 1;       # one column of row labels
-    cvrt$LoadFile(covariates.file);
+    cvrt = SlicedData$new()
+    cvrt$fileDelimiter = "\t"      # the TAB character
+    cvrt$fileOmitCharacters = "NA" # denote missing values
+    cvrt$fileSkipRows = 1          # one row of column labels
+    cvrt$fileSkipColumns = 1       # one column of row labels
+    cvrt$LoadFile(covariates.file)
   },
   error=function(e){
     stop("The following error occured during reading the covariates file:\n",conditionMessage(e))
@@ -98,18 +98,18 @@ if((!file.exists(Out.name)) | (overwrite)){
   
   cat("Reading genotype data...\n")
   tryCatch(expr = {
-    snps = SlicedData$new();
-    snps$fileDelimiter = "\t";      # the TAB character
-    snps$fileOmitCharacters = "NA"; # denote missing values;
-    snps$fileSkipRows = 1;          # one row of column labels
-    snps$fileSkipColumns = 1;       # one column of row labels
-    snps$LoadFile(SNP.file);
+    snps = SlicedData$new()
+    snps$fileDelimiter = "\t"      # the TAB character
+    snps$fileOmitCharacters = "NA" # denote missing values
+    snps$fileSkipRows = 1          # one row of column labels
+    snps$fileSkipColumns = 1       # one column of row labels
+    snps$LoadFile(SNP.file)
   },
   error=function(e){
     stop("The following error occured during reading the genotype file related to chr ",chr,":\n",conditionMessage(e))
   })
   cat("Reading SNP location data...\n")
-  snpspos = read.table(SNP.location.file, header = TRUE, stringsAsFactors = FALSE);
+  snpspos = read.table(SNP.location.file, header = TRUE, stringsAsFactors = FALSE)
   
   dir.create(paste0(OutDir,"/",OutPrefix,".matrixEQTL.chr",chr))
   
@@ -133,10 +133,10 @@ if((!file.exists(Out.name)) | (overwrite)){
     cisDist = cisDist,
     pvalue.hist = "qqplot",
     min.pv.by.genesnp = FALSE,
-    noFDRsaveMemory = FALSE );
+    noFDRsaveMemory = FALSE )
   
-  unlink(output_file_name_tra);
-  unlink(output_file_name_cis);
+  unlink(output_file_name_tra)
+  unlink(output_file_name_cis)
   
   cat("Saving the results on: ",Out.name)
   save(me,file=Out.name)
