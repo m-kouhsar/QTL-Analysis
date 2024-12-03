@@ -12,6 +12,7 @@ covar.fact <- trimws(args[6])
 covar.num <- trimws(args[7])
 OutPrefix <- trimws(args[8]) 
 chr <- trimws(args[9])
+overwrite <- trimws(args[10])
 
 cat("############################### PrepareData.R script ###########################################\n")
 cat("Input arguments:\n")
@@ -90,13 +91,13 @@ if(!all(gene_loc_all$geneid %in% row.names(exp_all))){
 exp_all <- cbind.data.frame(geneid = rownames(exp_all),exp_all)
 
 
-if(!file.exists(exp.txt.file)){
+if((!file.exists(exp.txt.file))|(overwrite)){
   cat("Saving Expression data...\n")
   write.table(exp_all,file = exp.txt.file,quote = F,col.names = T,row.names = F,sep = '\t')
 }else{
   cat(exp.txt.file," exists\n")
 }
-if(!file.exists(geneLocation.txt.file)){
+if((!file.exists(geneLocation.txt.file))|(overwrite)){
   cat("Saving gene location data...\n")
   write.table(gene_loc_all,file = geneLocation.txt.file,quote = F,col.names = T,row.names = F,sep = '\t')
 }else{
@@ -112,7 +113,7 @@ for (i in chr) {
   snp.file = paste0(OutPrefix,".snps",".chr",i,".txt")
   snp.loc.file=paste0(OutPrefix,".snps.loc",".chr",i,".txt")
   
-  if((!file.exists(snp.file)) | (!file.exists(snp.loc.file))){
+  if((!file.exists(snp.file)) | (!file.exists(snp.loc.file))|(overwrite)){
     if(file.exists(genotype.txt.file)){
       cat(paste("Reading Genotype text data chr",i,"...\n"))
       snps<-fread(genotype.txt.file, data.table = FALSE,nThread=16)
@@ -155,7 +156,7 @@ for (i in chr) {
       
 }
 cat("******************************************\n")
-if(!file.exists(covariat.file)){
+if((!file.exists(covariat.file))|(overwrite)){
   
   cat("Generating covariates file...\n")
   
