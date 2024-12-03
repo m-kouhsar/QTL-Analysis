@@ -23,8 +23,9 @@ fi
 
 for i in ${chr[@]} 
 do
-  echo "---------------------------------------------------------\n"
-  echo "Working on chromosome $i ..."
+  echo "***************************************************************************************"
+  echo "                               Working on chromosome $i ..."
+  echo "***************************************************************************************"
   Rscript ${ScriptDir}/Main.R $OutPrefix $i $Dist $CisPvalue $TransPvalue $TransCrossChr 
 done
 
