@@ -3,15 +3,15 @@ args<-commandArgs(trailingOnly = TRUE)
 suppressMessages(library(stringr))
 suppressMessages(library(data.table))
 
-fam.file <- args[1]
-eigenvec.file <- args[2]
-exp.rds.file <- args[3]
-exp.pheno.file <- args[4]
-geneLocation.csv.file <- args[5]
-covar.fact <- args[6] 
-covar.num <- args[7] 
-OutPrefix <- args[8] 
-chr <- args[9]
+fam.file <- trimws(args[1])
+eigenvec.file <- trimws(args[2])
+exp.rds.file <- trimws(args[3])
+exp.pheno.file <- trimws(args[4])
+geneLocation.csv.file <- trimws(args[5])
+covar.fact <- trimws(args[6])
+covar.num <- trimws(args[7])
+OutPrefix <- trimws(args[8]) 
+chr <- trimws(args[9])
 
 cat("############################### PrepareData.R script ###########################################\n")
 cat("Input arguments:\n")
@@ -103,31 +103,6 @@ if(!file.exists(geneLocation.txt.file)){
   cat(geneLocation.txt.file," exists\n")
 }
 
-if(file.exists(exp.pheno.file)){
-  exp_sample <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
-  
-  if(!identical(rownames(exp_sample) , colnames(exp_all))){
-    warning("Sample names in expression matrix and phenotype data are not exactly matched! The intersection will be consider.")
-    shared_names <- intersect(colnames(exp_all),rownames(exp_sample))
-    exp_sample <- exp_sample[rownames(exp_sample) %in% shared_names,]
-    exp_sample <- exp_sample[match(shared_names,rownames(exp_sample)),]
-  }
-  if(covar.fact!=""){
-    covar.fact = str_split(covar.fact,pattern = ',',simplify = T)[1,]
-    for (c in covar.fact) {
-      exp_sample[,c] <- as.numeric(as.factor(exp_sample[,c]))
-    }
-  }
-  if(covar.num != ""){
-    covar.num = str_split(covar.num,pattern = ',',simplify = T)[1,]
-    for (c in covar.num) {
-      exp_sample[,c] <- as.numeric(exp_sample[,c])
-    }
-  }
-}else{
-  message("No phenotype file is provided!")
-  }
-
 for (i in chr) {
   cat("************************\n")
   cat("Working on chr ",i,":\n")
@@ -181,28 +156,43 @@ for (i in chr) {
 }
 cat("******************************************\n")
 if(!file.exists(covariat.file)){
+  
   cat("Generating covariates file...\n")
-
-  if((covar.fact!="")&(covar.num!="")&file.exists(exp.pheno.file)){
-    covariates <- cbind.data.frame(exp_sample[,covar.fact],exp_sample[,covar.num],eigenvec$V3,eigenvec$V4,eigenvec$V5)
-    names(covariates) <- c(covar.fact,covar.num,"PC1","PC2","PC3")
+  
+  covariates <- cbind.data.frame(eigenvec$V3,eigenvec$V4,eigenvec$V5)
+  names(covariates) <- c("PC1","PC2","PC3")
+  
+  if(file.exists(exp.pheno.file)){
+    exp.pheno <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
     
-  }else{
-    if((covar.fact!="")){
-      covariates <- cbind.data.frame(exp_sample[,covar.fact],eigenvec$V3,eigenvec$V4,eigenvec$V5)
-      names(covariates) <- c(covar.fact,"PC1","PC2","PC3")
-      
-    }else{
-      if((covar.num!="")){
-        covariates <- cbind.data.frame(exp_sample[,covar.num],eigenvec$V3,eigenvec$V4,eigenvec$V5)
-        names(covariates) <- c(covar.num,"PC1","PC2","PC3")
-        
-      }else{
-        covariates <- cbind.data.frame(eigenvec$V3,eigenvec$V4,eigenvec$V5)
-        names(covariates) <- c("PC1","PC2","PC3")
-        
+    if(!identical(rownames(exp.pheno) , colnames(exp_all))){
+      warning("Sample names in expression matrix and phenotype data are not exactly matched! The intersection will be consider.")
+      shared_names <- intersect(colnames(exp_all),rownames(exp.pheno))
+      exp.pheno <- exp.pheno[rownames(exp.pheno) %in% shared_names,]
+      exp.pheno <- exp.pheno[match(shared_names,rownames(exp.pheno)),]
+    }
+    if(covar.fact!=""){
+      covar.fact = trimws(str_split_1(covar.fact,pattern = ','))
+      covar.fact = covar.fact[covar.fact != ""]
+      if(length(covar.fact) > 0){
+        for (c in covar.fact) {
+          exp.pheno[,c] <- as.numeric(as.factor(exp.pheno[,c]))
+        }
+        covariates <- cbind.data.frame(exp.pheno[,covar.fact],covariates)
       }
     }
+    if(covar.num != ""){
+      covar.num = trimws(str_split(covar.num,pattern = ','))
+      covar.num = covar.num[covar.num != ""]
+      if(length(covar.num) > 0){
+        for (c in covar.num) {
+          exp.pheno[,c] <- as.numeric(exp.pheno[,c])
+        }
+        covariates <- cbind.data.frame(exp.pheno[,covar.num],covariates)
+      }
+    }
+  }else{
+    message("No phenotype file is provided!")
   }
   
   rownames(covariates) <- colnames(exp_all)[-1]
@@ -212,7 +202,7 @@ if(!file.exists(covariat.file)){
   
   cat("Sample ids matched in covariate file with the others? ")
   if(file.exists(exp.pheno.file)){
-    cat(ifelse(all(sapply(list(colnames(exp_all)[-1], rownames(exp_sample),rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
+    cat(ifelse(all(sapply(list(colnames(exp_all)[-1], rownames(exp.pheno),rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
   } else{
       cat(ifelse(all(sapply(list(colnames(exp_all)[-1],rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
       }
