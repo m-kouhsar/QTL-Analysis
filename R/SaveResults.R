@@ -7,6 +7,7 @@ dist_ <- as.numeric(args[4])
 trans.cross.chr <- ifelse(tolower(trimws(args[5]))=="yes",".CrossChr","")
 save.csv.cis <- ifelse(tolower(trimws(args[6]))=="yes",T,F)
 save.csv.trans <- ifelse(tolower(trimws(args[7]))=="yes",T,F)
+overwrite <- ifelse(trimws(tolower(args[8]))=="yes" , T ,F)
 
 library(stringr)
 OutDir <- dirname(OutPrefix)
@@ -21,7 +22,7 @@ cat("\n")
 print("Preparing merged QTL results...")
 cat("\n")
 
-if(!file.exists(merge_file)){
+if((!file.exists(merge_file))|(overwrite)){
   for (i in 1:22) {
     file_ <- paste0(OutPrefix,".matrixEQTL.chr",i,"/",paste0(OutPrefix,".matrixEQTL.chr",i,".RData"))
     if(file.exists(file_)){
@@ -75,4 +76,3 @@ if(save.csv.trans)
   }else{
     print("There is no Trans results!")
   }
-
