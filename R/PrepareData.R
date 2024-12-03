@@ -84,6 +84,7 @@ if(file.exists(geneLocation.csv.file)){
 }else{
   stop("Unable to find ",geneLocation.csv.file)
 }
+
 if(!all(gene_loc_all$geneid %in% row.names(exp_all))){
   warning("Some Gene/CpG IDs in the Gene/CpG location data are not represented in the expression matrix! Removing them...")
   gene_loc_all = gene_loc_all[gene_loc_all$geneid %in% rownames(exp_all),]
