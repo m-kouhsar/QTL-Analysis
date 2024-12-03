@@ -77,7 +77,7 @@ if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rown
 
 if(file.exists(geneLocation.csv.file)){
   cat("Reading Gene location data...\n")
-  gene_loc_all <- read.csv(file=geneLocation.csv.file,stringsAsFactors = F)
+  gene_loc_all <- read.csv(file=geneLocation.csv.file,stringsAsFactors = F)[,1:4]
   names(gene_loc_all) <- c("geneid","chr","left","right")
 }else{
   stop("Unable to find ",geneLocation.csv.file)
