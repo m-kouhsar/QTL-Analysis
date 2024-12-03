@@ -26,7 +26,7 @@ do
   echo "***************************************************************************************"
   echo "                               Working on chromosome $i ..."
   echo "***************************************************************************************"
-  Rscript ${ScriptDir}/Main.R $OutPrefix $i $Dist $CisPvalue $TransPvalue $TransCrossChr 
+  Rscript ${ScriptDir}/Main.R $OutPrefix $i $Dist $CisPvalue $TransPvalue $TransCrossChr $Overwrite
 done
 
 
