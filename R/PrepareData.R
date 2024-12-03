@@ -25,6 +25,7 @@ cat("     Factor covariates: ",covar.fact,"\n")
 cat("     Numeric covariates: ",covar.num,"\n")
 cat("     Chromosome: ",chr,"\n")
 cat("     Output files prefix: ",OutPrefix,"\n")
+cat("     Overwrite previous results? ",overwrite,"\n")
 cat("#################################################################################################\n")
 
 if(chr=="all"){
