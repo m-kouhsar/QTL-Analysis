@@ -165,7 +165,7 @@ if(!file.exists(covariat.file)){
   if(file.exists(exp.pheno.file)){
     exp.pheno <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
     
-    if(!identical(rownames(exp.pheno) , colnames(exp_all))){
+    if(!identical(rownames(exp.pheno) , colnames(exp_all)[-1])){
       warning("Sample names in expression matrix and phenotype data are not exactly matched! The intersection will be consider.")
       shared_names <- intersect(colnames(exp_all),rownames(exp.pheno))
       exp.pheno <- exp.pheno[rownames(exp.pheno) %in% shared_names,]
@@ -182,7 +182,7 @@ if(!file.exists(covariat.file)){
       }
     }
     if(covar.num != ""){
-      covar.num = trimws(str_split(covar.num,pattern = ','))
+      covar.num = trimws(str_split_1(covar.num,pattern = ','))
       covar.num = covar.num[covar.num != ""]
       if(length(covar.num) > 0){
         for (c in covar.num) {
