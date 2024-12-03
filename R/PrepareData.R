@@ -12,7 +12,7 @@ covar.fact <- trimws(args[6])
 covar.num <- trimws(args[7])
 OutPrefix <- trimws(args[8]) 
 chr <- trimws(args[9])
-overwrite <- trimws(args[10])
+overwrite <- ifelse(trimws(tolower(args[10]))=="yes" , T ,F)
 
 cat("############################### PrepareData.R script ###########################################\n")
 cat("Input arguments:\n")
@@ -25,7 +25,7 @@ cat("     Factor covariates: ",covar.fact,"\n")
 cat("     Numeric covariates: ",covar.num,"\n")
 cat("     Chromosome: ",chr,"\n")
 cat("     Output files prefix: ",OutPrefix,"\n")
-cat("     Overwrite previous results? ",overwrite,"\n")
+cat("     Overwrite previous results? ",ifelse(overwrite,"Yes","No"),"\n")
 cat("#################################################################################################\n")
 
 if(chr=="all"){
@@ -154,7 +154,7 @@ for (i in chr) {
     
   }else
     cat("Both files already exist:\n",snp.file,"\n",snp.loc.file,"\n")
-      
+  
 }
 cat("******************************************\n")
 if((!file.exists(covariat.file))|(overwrite)){
@@ -206,8 +206,8 @@ if((!file.exists(covariat.file))|(overwrite)){
   if(file.exists(exp.pheno.file)){
     cat(ifelse(all(sapply(list(colnames(exp_all)[-1], rownames(exp.pheno),rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
   } else{
-      cat(ifelse(all(sapply(list(colnames(exp_all)[-1],rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
-      }
+    cat(ifelse(all(sapply(list(colnames(exp_all)[-1],rownames(eigenvec),colnames(covariates)[-1]), FUN = identical, rownames(samples))),"Yes","NO"),"\n")
+  }
   
   cat("Saving covaraites file...\n")
   write.table(covariates,file = covariat.file,quote = F,col.names = T,row.names = F,sep = '\t')
