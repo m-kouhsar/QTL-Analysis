@@ -10,5 +10,5 @@
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk # email address
 
 
-Rscript $1/Main.R $2 $SLURM_ARRAY_TASK_ID $3 $4 $5 $6 
+Rscript $1/Main.R $2 $SLURM_ARRAY_TASK_ID $3 $4 $5 $6 $7
 
