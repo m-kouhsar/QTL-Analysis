@@ -22,7 +22,7 @@ then
 fi
 
 
-sbatch --array=$chr ${ScriptDir}/Main.sh ${ScriptDir} $OutPrefix $Dist $CisPvalue $TransPvalue $TransCrossChr
+sbatch --array=$chr ${ScriptDir}/Main.sh ${ScriptDir} $OutPrefix $Dist $CisPvalue $TransPvalue $TransCrossChr $Overwrite
 
 
 
