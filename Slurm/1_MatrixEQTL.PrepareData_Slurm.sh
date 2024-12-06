@@ -20,7 +20,10 @@ chr="${chr%[[:space:]]}"
 chr="$(echo "$chr" | tr '[:upper:]' '[:lower:]')"
 
 OutDir=$(dirname "$OutPrefix")
-mkdir -p $OutDir
+OutFilePrefix=$(basename "$OutPrefix")
+PlinkDir="${OutDir}/QTL.PlinkData"
+
+mkdir -p $PlinkDir
 
 IFS=',' read -r -a array <<< "$chr"
 
@@ -31,21 +34,27 @@ fi
 
 for i in "${array[@]}"
 do
-  if [ ! -f ${OutPrefix}.chr${i}.raw ] || [ $Overwrite = "yes" ]
+  if [ ! -f ${PlinkDir}/${OutFilePrefix}.chr${i}.raw ] || [ $Overwrite = "yes" ]
   then
     echo "Converting binary format chromosome $i..."
-    plink --bfile ${GenotypeBinaryPrefix} --recodeA --chr $i --out ${OutPrefix}.chr${i}
+    plink --bfile ${GenotypeBinaryPrefix} --recodeA --chr $i --out ${PlinkDir}/${OutFilePrefix}.chr${i}
+    echo "#########################################################################################"
+  else
+    echo "Formatted genotype data for chromosome $i already exist."
     echo "#########################################################################################"
   fi
 done
 
-if [ ! -f ${OutPrefix}.eigenvec ] || [ $Overwrite = "yes" ]
+if [ ! -f ${PlinkDir}/${OutFilePrefix}.eigenvec ] || [ $Overwrite = "yes" ]
 then
   echo "Calculating genotype data PCs..."
-  gcta64 --bfile ${GenotypeBinaryPrefix} --make-grm-bin --out ${OutPrefix} --thread-num 16
-  gcta64 --grm ${OutPrefix} --pca --out ${OutPrefix}
+  gcta64 --bfile ${GenotypeBinaryPrefix} --make-grm-bin --out ${PlinkDir}/${OutFilePrefix} --thread-num 16
+  gcta64 --grm ${PlinkDir}/${OutFilePrefix} --pca --out ${PlinkDir}/${OutFilePrefix}
+else
+    echo "Genotype data PCs already exists."
+    echo "#########################################################################################"
 fi
 
 
-Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${OutPrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" $chr $Overwrite
+Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${PlinkDir}/${OutFilePrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" "$chr" "$Overwrite"
 
