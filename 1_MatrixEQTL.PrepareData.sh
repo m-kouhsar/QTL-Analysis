@@ -11,6 +11,7 @@ chr="${chr%[[:space:]]}"
 chr="$(echo "$chr" | tr '[:upper:]' '[:lower:]')"
 
 OutDir=$(dirname "$OutPrefix")
+OutFilePrefix=$(basename "$OutPrefix")
 PlinkDir="${OutDir}/QTL.PlinkData"
 FormattedDataDir="${OutDir}/QTL.PreparedInput"
 ResultsDir="${OutDir}/QTL.Results"
