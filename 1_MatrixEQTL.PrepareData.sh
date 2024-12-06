@@ -14,7 +14,6 @@ OutDir=$(dirname "$OutPrefix")
 OutFilePrefix=$(basename "$OutPrefix")
 PlinkDir="${OutDir}/QTL.PlinkData"
 FormattedDataDir="${OutDir}/QTL.PreparedInput"
-ResultsDir="${OutDir}/QTL.Results"
 
 mkdir -p $OutDir
 mkdir -p $PlinkDir
