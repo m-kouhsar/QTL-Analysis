@@ -141,7 +141,7 @@ for (i in chr) {
     snps_loc <- str_split(snps$snpid,pattern=':',simplify=T)[,c(1,2)]
     snps_loc <- cbind.data.frame(snps$snpid,snps_loc)
     names(snps_loc) <- c("snpid","chr","pos")
-    snps_loc$pos <- as.numeric(gsub("[^0-9.-]", "", snps_loc$pos))
+    snps_loc$pos <- as.numeric(gsub("[^0-9]", "", snps_loc$pos))
     
     cat(paste("Are the SNP ids matched in in chr",i," data? "))
     cat(ifelse(identical(snps$snpid,snps_loc$snpid),"Yes","NO"),"\n")
