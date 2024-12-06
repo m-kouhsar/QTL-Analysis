@@ -11,9 +11,6 @@
 
 source $1
 
-OutDir=$(dirname "$OutPrefix")
-mkdir -p $OutDir
-
 if [ $chr == all ]
 then
   array=($(seq 1 1 22))  ## seq FIRST STEP LAST
