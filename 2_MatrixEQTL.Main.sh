@@ -12,7 +12,12 @@
 source $1
 
 OutDir=$(dirname "$OutPrefix")
+OutFilePrefix=$(basename "$OutPrefix")
+
+ResultsDir="${OutDir}/QTL.Results"
+
 mkdir -p $OutDir
+mkdir -p $ResultsDir
 
 if [ $chr == all ] 
 then 
@@ -26,7 +31,7 @@ do
   echo "***************************************************************************************"
   echo "                               QTL analysis chromosome $i ..."
   echo "***************************************************************************************"
-  Rscript ${ScriptDir}/Main.R $OutPrefix $i $Dist $CisPvalue $TransPvalue $TransCrossChr $Overwrite
+  Rscript ${ScriptDir}/Main.R "${ResultsDir}/${OutFilePrefix}" $i $Dist $CisPvalue $TransPvalue $TransCrossChr "$Overwrite"
 done
 
 
