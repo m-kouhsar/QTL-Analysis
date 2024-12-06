@@ -7,27 +7,38 @@ dist_ <- as.numeric(args[4])
 trans.cross.chr <- ifelse(tolower(trimws(args[5]))=="yes",".CrossChr","")
 save.csv.cis <- ifelse(tolower(trimws(args[6]))=="yes",T,F)
 save.csv.trans <- ifelse(tolower(trimws(args[7]))=="yes",T,F)
-overwrite <- ifelse(trimws(tolower(args[8]))=="yes" , T ,F)
+chr <- trimws(args[8])
+overwrite <- ifelse(trimws(tolower(args[9]))=="yes" , T ,F)
 
 library(stringr)
-OutDir <- dirname(OutPrefix)
-setwd(OutDir)
-OutPrefix <- basename(OutPrefix)
 
-cis_file = paste0(OutPrefix,".eQTL.Cis.Pval.",cis_pval,".Dist.",dist_,".csv")
-trans_file = paste0(OutPrefix,".eQTL.Trans",trans.cross.chr,".Pval.",trans_pval,".Dist.",dist_,".csv")
-merge_file = paste0(OutPrefix,".eQTL",trans.cross.chr,".TransPvalue.",trans_pval,".CisPvalue.",cis_pval,".Dist.",dist_,".RData")
+if(chr=="all"){
+  chr <- seq(1,22,1)
+}else{
+  chr <- as.numeric(str_split(trimws(chr), pattern = ",", simplify = T)[1,])
+}
+
+OutDir <- dirname(OutPrefix)
+ResultsDir <- paste0(OutDir , "/QTL.Results")
+setwd(ResultsDir)
+OutFilePrefix <- basename(OutPrefix)
+
+cis_file = paste0(OutFilePrefix,".eQTL.Cis.Pval.",cis_pval,".Dist.",dist_,".csv")
+trans_file = paste0(OutFilePrefix,".eQTL.Trans",trans.cross.chr,".Pval.",trans_pval,".Dist.",dist_,".csv")
+merge_file = paste0(OutFilePrefix,".eQTL",trans.cross.chr,".TransPvalue.",trans_pval,".CisPvalue.",cis_pval,".Dist.",dist_,".RData")
 
 cat("Preparing merged QTL results...\n")
 
 if((!file.exists(merge_file))|(overwrite)){
-  for (i in 1:22) {
-    file_ <- paste0(OutPrefix,".matrixEQTL.chr",i,"/",paste0(OutPrefix,".matrixEQTL.chr",i,".RData"))
+  for (i in chr) {
+    file_ <- paste0(OutFilePrefix,".matrixEQTL.chr",i,".RData")
     if(file.exists(file_)){
-      cat("Reading QTL file Chr",i,"...\n")
+      cat("Reading QTL file Chr",i,"(",file_,")","...\n")
       load(file_)
       assign(x = paste0("eQTL.chr",i),value = me)
       remove(me)
+    }else{
+      cat("There is no results for chromosome ",i,"\n")
     }
     
   }
