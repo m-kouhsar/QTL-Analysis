@@ -45,5 +45,5 @@ then
 fi
 
 
-Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${PlinkDir}/${OutFilePrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "${FormattedDataDir}/${OutFilePrefix}" "$chr" "$Overwrite"
+Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${PlinkDir}/${OutFilePrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" "$chr" "$Overwrite"
 
