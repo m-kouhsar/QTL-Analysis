@@ -30,21 +30,21 @@ fi
 
 for i in "${array[@]}"
 do
-  if [ ! -f ${OutPrefix}.chr${i}.raw ] || [ $Overwrite = "yes" ]
+  if [ ! -f ${PlinkDir}/${OutFilePrefix}.chr${i}.raw ] || [ $Overwrite = "yes" ]
   then
     echo "Converting binary format chromosome $i..."
-    plink --bfile ${GenotypeBinaryPrefix} --recodeA --chr $i --out ${OutPrefix}.chr${i}
+    plink --bfile ${GenotypeBinaryPrefix} --recodeA --chr $i --out ${PlinkDir}/${OutFilePrefix}.chr${i}
     echo "#########################################################################################"
   fi
 done
 
-if [ ! -f ${OutPrefix}.eigenvec ] || [ $Overwrite = "yes" ]
+if [ ! -f ${PlinkDir}/${OutFilePrefix}.eigenvec ] || [ $Overwrite = "yes" ]
 then
   echo "Calculating genotype data PCs..."
-  gcta64 --bfile ${GenotypeBinaryPrefix} --make-grm-bin --out ${OutPrefix} --thread-num 16
-  gcta64 --grm ${OutPrefix} --pca --out ${OutPrefix}
+  gcta64 --bfile ${GenotypeBinaryPrefix} --make-grm-bin --out ${PlinkDir}/${OutFilePrefix} --thread-num 16
+  gcta64 --grm ${PlinkDir}/${OutFilePrefix} --pca --out ${PlinkDir}/${OutFilePrefix}
 fi
 
 
-Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${OutPrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "$OutPrefix" $chr $Overwrite
+Rscript ${ScriptDir}/PrepareData.R ${GenotypeBinaryPrefix}.fam ${PlinkDir}/${OutFilePrefix}.eigenvec $ExpressionFile $PhenotypeFile $GeneLocationFile "$FactCovar" "$NumCovar" "${FormattedDataDir}/${OutFilePrefix}" "$chr" "$Overwrite"
 
