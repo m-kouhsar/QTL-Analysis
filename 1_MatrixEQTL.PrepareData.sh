@@ -11,7 +11,14 @@ chr="${chr%[[:space:]]}"
 chr="$(echo "$chr" | tr '[:upper:]' '[:lower:]')"
 
 OutDir=$(dirname "$OutPrefix")
+PlinkDir="${OutDir}/QTL.PlinkData"
+FormattedDataDir="${OutDir}/QTL.PreparedInput"
+ResultsDir="${OutDir}/QTL.Results"
+
 mkdir -p $OutDir
+mkdir -p $PlinkDir
+mkdir -p $FormattedDataDir
+mkdir -p $ResultsDir
 
 IFS=',' read -r -a array <<< "$chr"
 
