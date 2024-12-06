@@ -11,5 +11,4 @@
 
 source $1
 
-Rscript ${ScriptDir}/SaveResults.R $OutPrefix $CisPvalue $TransPvalue $Dist $TransCrossChr $SavecsvCis $SavecsvTrans $Overwrite
-
+Rscript ${ScriptDir}/SaveResults.R $OutPrefix $CisPvalue $TransPvalue $Dist $TransCrossChr $SavecsvCis $SavecsvTrans $chr "$Overwrite"
