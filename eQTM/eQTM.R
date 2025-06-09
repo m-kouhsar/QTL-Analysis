@@ -312,4 +312,4 @@ message("Saving the results...")
 dir.create(dirname(OutPrefix), showWarnings = F , recursive = T)
 save(eQTMs,Plots, file = paste0(OutPrefix,".eQTM.rdat"))
 
-message("Add done!")
+message("All done!")
