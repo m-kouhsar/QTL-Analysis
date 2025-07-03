@@ -196,8 +196,6 @@ overlaps <- unique(overlaps)
 eQTMs <- as.data.frame(str_split(overlaps , pattern = ",", simplify = T))
 colnames(eQTMs) <- c("CpG" , "RNA")
 
-## Select CpGs and transcripts with the selected distance to each other
-
 message("Total number of tests: ", nrow(eQTMs))
 
 ## Prepare dataframe for results
