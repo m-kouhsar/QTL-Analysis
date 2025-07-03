@@ -278,11 +278,6 @@ for (i in 1:nrow(eQTMs)) {
       
       Plots[[i]] <- cor_plot
       
-      # ggsave(
-      #   filename = paste0("ROSMAP_corplot_", as.character(d.cis), "_", ## TODO: change file name
-      #                     names(plot_data)[2], "_", names(plot_data)[3], ".png"), 
-      #   plot = cor_plot,
-      #   width = 6, height = 4)
     }
   }
 }
