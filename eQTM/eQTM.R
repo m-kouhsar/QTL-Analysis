@@ -108,11 +108,11 @@ if(!all(identical(rownames(Pheno) , colnames(DNAm)),identical(rownames(Pheno) , 
   }
 }
 
-message("Reading CpG annotation data...")
+message("Reading RNA annotation data...")
 RNA.annot <- suppressWarnings(fread(RNA.annot_file , stringsAsFactors = F , fill = F , data.table = F))
 RNA.annot <- RNA.annot[!duplicated(RNA.annot$id),]
 
-message("Reading RNA annotation data...")
+message("Reading CpG annotation data...")
 DNA.annot <- suppressWarnings(fread(DNA.annot_file , stringsAsFactors = F , fill = F , data.table = F))
 DNA.annot <- DNA.annot[!duplicated(DNA.annot$id),]
 
