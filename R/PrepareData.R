@@ -7,7 +7,7 @@ fam.file <- trimws(args[1])
 eigenvec.file <- trimws(args[2])
 exp.rds.file <- trimws(args[3])
 exp.pheno.file <- trimws(args[4])
-geneLocation.csv.file <- trimws(args[5])
+geneLocation.file <- trimws(args[5])
 covar.fact <- trimws(args[6])
 covar.num <- trimws(args[7])
 OutPrefix <- trimws(args[8]) 
@@ -20,7 +20,7 @@ cat("     fam file: ",fam.file,"\n")
 cat("     eigenvec file: ",eigenvec.file,"\n")
 cat("     Methylation/Expression matrix file: ",exp.rds.file,"\n")
 cat("     Phenotype file: ",exp.pheno.file,"\n")
-cat("     CpG/Gene location file file: ",geneLocation.csv.file,"\n")
+cat("     CpG/Gene location file: ",geneLocation.file,"\n")
 cat("     Factor covariates: ",covar.fact,"\n")
 cat("     Numeric covariates: ",covar.num,"\n")
 cat("     Chromosome: ",chr,"\n")
@@ -85,12 +85,14 @@ if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rown
   
 }
 
-if(file.exists(geneLocation.csv.file)){
+if(file.exists(geneLocation.file)){
   cat("Reading Gene location data...\n")
-  gene_loc_all <- read.csv(file=geneLocation.csv.file,stringsAsFactors = F)[,1:4]
+  gene_loc_all <- read.csv(file=geneLocation.file,stringsAsFactors = F)
+  colnames(gene_loc_all) <- tolower(colnames(gene_loc_all))
+  gene_loc_all <- gene_loc_all[,c("id","chr","start","end")]
   names(gene_loc_all) <- c("geneid","chr","left","right")
 }else{
-  stop("Unable to find ",geneLocation.csv.file)
+  stop("Unable to find ",geneLocation.file)
 }
 
 if(!all(gene_loc_all$geneid %in% row.names(exp_all))){
