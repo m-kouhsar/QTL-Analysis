@@ -132,7 +132,7 @@ if((!file.exists(covariat.file))|(overwrite)){
     covar.fact = trimws(str_split_1(covar.fact,pattern = ','))
     covar.fact = covar.fact[covar.fact != ""]
     covar.all = c(covar.num , covar.fact)
-    print(paste(covar.all , collapse = ","))
+    
     if(!all(c(covar.num , covar.fact) %in% colnames(exp.pheno))){
       stop("The following covariates are not in the phenotype file column names:\n",
            paste(setdiff(c(covar.num , covar.fact) , colnames(exp.pheno))))
