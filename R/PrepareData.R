@@ -48,7 +48,7 @@ covariat.file = paste0(FormattedDataDir,"/",OutFilePrefix,".covariates.txt")
 
 if(file.exists(fam.file)){
   cat("Reading fam file...\n")
-  samples <- read.table(file=fam.file,sep=" ",header=F,stringsAsFactors=F)
+  samples <- fread(fam.file,header=F,stringsAsFactors=F, data.table = F)
   rownames(samples) <- samples$V2
 }else{
   stop("Unable to find ",fam.file)
@@ -68,21 +68,22 @@ if(file.exists(exp.rds.file)){
   stop("Unable to find ",exp.rds.file)
 }
 
-if(!all(sapply(list(colnames(exp_all),rownames(eigenvec)), FUN = identical, rownames(samples)))){
-  warning("Sample names in expression matrix and genotype data are not exactly matched! The intersection will be consider.")
-  shared_names <- Reduce(intersect, list(colnames(exp_all),rownames(samples),rownames(eigenvec)))
-  if(length(shared_names)==0){
-    stop("There is no shared samples between the Methylation/Expression matrix and Genotype data! 
-         Check the sample IDs in fam and Expression/Methylation files.")
-  }else{
-    exp_all <- exp_all[,colnames(exp_all) %in% shared_names]
-    samples <- samples[rownames(samples) %in% shared_names,]
-    
-    exp_all <- exp_all[shared_names]
-    samples <- samples[match(shared_names,rownames(samples)),]
-    eigenvec <- eigenvec[match(shared_names,rownames(eigenvec)),]
-  }
+cols_exp_all <- colnames(exp_all)
+rows_eigenvec <- rownames(eigenvec)
+rows_samples <- rownames(samples)
+if(!identical(cols_exp_all, rows_eigenvec) || !identical(cols_exp_all, rows_samples)){
   
+  sorted_exp_all <- sort(cols_exp_all)
+  sorted_eigenvec <- sort(rows_eigenvec)
+  sorted_samples <- sort(rows_samples)
+  if(identical(sorted_exp_all, sorted_eigenvec) && identical(sorted_exp_all, sorted_samples)){
+    exp_all <- exp_all[, sorted_exp_all]
+    eigenvec <- eigenvec[sorted_exp_all, ]
+    samples <- samples[sorted_exp_all, ]
+  }else{
+    stop("Sample names in expression matrix and genotype data are not matched! 
+       Checked IID in fam file and column names in expression matrix.")
+  }
 }
 
 if(file.exists(geneLocation.file)){
@@ -179,6 +180,16 @@ if((!file.exists(covariat.file))|(overwrite)){
   if(file.exists(exp.pheno.file)){
     exp.pheno <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
     
+    covar.num = trimws(str_split_1(covar.num,pattern = ','))
+    covar.num = covar.num[covar.num != ""]
+    covar.fact = trimws(str_split_1(covar.fact,pattern = ','))
+    covar.fact = covar.fact[covar.fact != ""]
+    
+    if(!all(c(covar.num , covar.fact) %in% colnames(exp.pheno))){
+      stop("The following covariates are not in the phenotype file column names:\n",
+           paste(setdiff(c(covar.num , covar.fact) , colnames(exp.pheno))))
+    }
+    
     if(!identical(rownames(exp.pheno) , colnames(exp_all)[-1])){
       warning("Sample names in expression matrix and phenotype data are not exactly matched! The intersection will be consider.")
       shared_names <- intersect(colnames(exp_all),rownames(exp.pheno))
@@ -186,8 +197,7 @@ if((!file.exists(covariat.file))|(overwrite)){
       exp.pheno <- exp.pheno[match(shared_names,rownames(exp.pheno)),]
     }
     if(covar.fact!=""){
-      covar.fact = trimws(str_split_1(covar.fact,pattern = ','))
-      covar.fact = covar.fact[covar.fact != ""]
+      
       if(length(covar.fact) > 0){
         for (c in covar.fact) {
           exp.pheno[,c] <- as.numeric(as.factor(exp.pheno[,c]))
@@ -196,8 +206,6 @@ if((!file.exists(covariat.file))|(overwrite)){
       }
     }
     if(covar.num != ""){
-      covar.num = trimws(str_split_1(covar.num,pattern = ','))
-      covar.num = covar.num[covar.num != ""]
       if(length(covar.num) > 0){
         for (c in covar.num) {
           exp.pheno[,c] <- as.numeric(exp.pheno[,c])
