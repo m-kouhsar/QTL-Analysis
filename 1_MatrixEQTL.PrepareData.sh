@@ -40,7 +40,7 @@ do
   if [ ! -f ${PlinkDir}/${OutFilePrefix}.chr${i}.raw ] || [ $Overwrite = "yes" ]
   then
     echo "Converting binary format chromosome $i..."
-    plink --bfile ${GenotypeBinaryPrefix} --recodeA --chr $i --out ${PlinkDir}/${OutFilePrefix}.chr${i}
+    plink --bfile ${GenotypeBinaryPrefix} --recode A --chr $i --out ${PlinkDir}/${OutFilePrefix}.chr${i}
     echo "#########################################################################################"
   else
     echo "Formatted genotype data for chromosome $i already exist."
