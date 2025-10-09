@@ -68,22 +68,13 @@ if(file.exists(exp.rds.file)){
   stop("Unable to find ",exp.rds.file)
 }
 
-cols_exp_all <- colnames(exp_all)
-rows_eigenvec <- rownames(eigenvec)
-rows_samples <- rownames(samples)
-if(!identical(cols_exp_all, rows_eigenvec) || !identical(cols_exp_all, rows_samples)){
+exp_all <- exp_all[, sort(colnames(exp_all))]
+eigenvec <- eigenvec[sort(rownames(eigenvec)),]
+samples <- samples[sort(rownames(samples)),]
+if(!(identical(colnames(exp_all), rownames(eigenvec)) && identical(colnames(exp_all), rownames(samples)))){
   
-  sorted_exp_all <- sort(cols_exp_all)
-  sorted_eigenvec <- sort(rows_eigenvec)
-  sorted_samples <- sort(rows_samples)
-  if(identical(sorted_exp_all, sorted_eigenvec) && identical(sorted_exp_all, sorted_samples)){
-    exp_all <- exp_all[, sorted_exp_all]
-    eigenvec <- eigenvec[sorted_exp_all, ]
-    samples <- samples[sorted_exp_all, ]
-  }else{
-    stop("Sample names in expression matrix and genotype data are not matched! 
-       Checked IID in fam file and column names in expression matrix.")
-  }
+  stop("Sample names in expression matrix and genotype data are not matched! 
+     Checked IID in fam file and column names in expression matrix.")
 }
 
 if(file.exists(geneLocation.file)){
@@ -126,6 +117,7 @@ if((!file.exists(covariat.file))|(overwrite)){
   
   if(file.exists(exp.pheno.file)){
     exp.pheno <- read.csv(exp.pheno.file,row.names=1,stringsAsFactors = F) 
+    exp.pheno <- exp.pheno[sort(rownames(exp.pheno)),]
     
     covar.num = trimws(str_split_1(covar.num,pattern = ','))
     covar.num = covar.num[covar.num != ""]
