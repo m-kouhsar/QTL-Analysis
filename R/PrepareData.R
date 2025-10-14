@@ -87,11 +87,18 @@ if(file.exists(geneLocation.file)){
   stop("Unable to find ",geneLocation.file)
 }
 
-if(!all(gene_loc_all$geneid %in% row.names(exp_all))){
-  warning("Some Gene/CpG IDs in the Gene/CpG location data are not represented in the expression matrix! Removing them...")
-  gene_loc_all = gene_loc_all[gene_loc_all$geneid %in% rownames(exp_all),]
+genes = intersect(gene_loc_all$geneid , row.names(exp_all))
+if(length(genes) == 0){
+  stop("There is no expression data for gene/CpG IDs presented in the gene location file!
+       Check the gene/CpG IDs in expression matrix and gene location file.")
 }
 
+if(length(genes) < length(gene_loc_all$geneid)){
+  warning("Some Gene/CpG IDs in the Gene/CpG location data are not represented in the expression matrix! Removing them...")
+}
+
+exp_all <- exp_all[genes , ]
+gene_loc_all = gene_loc_all[gene_loc_all$geneid %in% genes,]
 exp_all <- cbind.data.frame(geneid = rownames(exp_all),exp_all)
 
 
